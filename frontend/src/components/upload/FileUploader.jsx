@@ -1,11 +1,16 @@
 import { useState } from 'react';
+import { analyzeCsvFile } from '../../services/api.js';
 
 function FileUploader() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState(null);
 
     function handleFileChange(event) {
         const file = event.target.files[0];
+        setAnalysisResult(null); 
+
         if (!file){
             setSelectedFile(null);
             setError("");
@@ -21,11 +26,25 @@ function FileUploader() {
         }
     }
 
-    function handleAnalyzeClick() {
+    async function handleAnalyzeClick() {
         if (!selectedFile) { 
             return;
         }
-        console.log("Select file : ", selectedFile);
+
+        try{
+            setIsLoading(true);
+            setError("");
+            setAnalysisResult(null);
+            
+            const result = await analyzeCsvFile(selectedFile);
+
+            setAnalysisResult(result);
+        } catch (error) {
+            console.error(error);
+            setError(error.message || "An error occurred while analyzing the CSV file.");
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -48,9 +67,18 @@ function FileUploader() {
                         </p>
                     </div>
                 )}
-                <button type="button" disabled={!selectedFile} className="analyze-button" onClick={handleAnalyzeClick}>
-                    Analyze CSV
+                <button type="button" disabled={!selectedFile || isLoading} className="analyze-button" onClick={handleAnalyzeClick}>
+                    {isLoading ? "Analyzing..." : "Analyze CSV"}
                 </button>
+                {analysisResult && (
+                    <div className="analysis-result">
+                        <p className="file_info_label">Backend response</p>
+                        <p>Filename : {selectedFile.name}</p>
+                        <p>Content type : {analysisResult.content_type}</p>
+                        <p>Size : {analysisResult.size_kb} KB</p>
+                        <p>Status : {analysisResult.message}</p>
+                    </div>
+                )}
             </div>
         </div>
     );
