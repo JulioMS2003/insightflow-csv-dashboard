@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { analyzeCsvFile } from '../../services/api.js';
+import AnalysisResult from '../analysis/AnalysisResult.jsx'
 
 function FileUploader() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -70,7 +71,8 @@ function FileUploader() {
                 <button type="button" disabled={!selectedFile || isLoading} className="analyze-button" onClick={handleAnalyzeClick}>
                     {isLoading ? "Analyzing..." : "Analyze CSV"}
                 </button>
-                {analysisResult && (
+                
+                {/* {analysisResult && (
                     <div className="analysis-result">
                         <p className="file_info_label">Backend response</p>
                         <p>Filename : {selectedFile.name}</p>
@@ -78,7 +80,9 @@ function FileUploader() {
                         <p>Size : {analysisResult.size_kb} KB</p>
                         <p>Status : {analysisResult.message}</p>
                     </div>
-                )}
+                )} */}
+
+                <AnalysisResult result = {analysisResult} />
             </div>
         </div>
     );
