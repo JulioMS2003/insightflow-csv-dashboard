@@ -54,6 +54,33 @@ async def analyze_csv(file: UploadFile = File(...)):
     column_types = df.dtypes.astype(str).to_dict()
     preview = df.head(10).fillna("").to_dict(orient="records")
 
+# quality
+
+    missing_values = df.isnull().sum().to_dict()
+    total_missing_values = int(df.isnull().sum().sum())
+    total_cells = row_count * columns_count
+    missing_percentage = round((total_missing_values / total_cells) * 100, 2) if total_cells > 0 else 0
+    duplicate_rows = int(df.duplicated().sum())
+    empty_columns = df.columns[df.isnull().all()].to_list()
+    duplicate_percentage = (duplicate_rows / row_count) * 100 if row_count > 0 else 0
+    empty_column_penalty = len(empty_columns) * 10
+    data_quality_score = 100 - (missing_percentage * 0.5) - (duplicate_percentage * 0.3) - (empty_column_penalty * 0.2)
+    data_quality_score = max(round(data_quality_score, 2), 0)
+
+    quality = {
+        "missing_values": missing_values,
+        "total_missing_values": total_missing_values,
+        "missing_percentage": missing_percentage,
+
+        "duplicate_rows": duplicate_rows,
+        "duplicate_percentage": round(duplicate_percentage, 2),
+
+        "empty_columns": empty_columns,
+        "empty_column_penalty": round(empty_column_penalty, 2),
+
+        "data_quality_score": data_quality_score
+    }
+
     return{
         "filename": file.filename,
         "content_type": file.content_type,
@@ -63,6 +90,7 @@ async def analyze_csv(file: UploadFile = File(...)):
         "columns" : column,
         "column_types" : column_types,
         "preview" : preview,
+        "quality" : quality,
         "message": "CSV analyzed successfully."
         }
 
