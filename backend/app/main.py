@@ -50,7 +50,7 @@ async def analyze_csv(file: UploadFile = File(...)):
     size_kb = round(len(content)/1024,2)
     row_count = len(df)
     columns_count = len(df.columns)
-    column = df.columns.to_list()
+    column_names = df.columns.to_list()
     column_types = df.dtypes.astype(str).to_dict()
     preview = df.head(10).fillna("").to_dict(orient="records")
 
@@ -116,7 +116,7 @@ async def analyze_csv(file: UploadFile = File(...)):
         "size_kb": size_kb,
         "row_count" : row_count,
         "column_count" : columns_count,
-        "columns" : column,
+        "columns" : column_names,
         "column_types" : column_types,
         "preview" : preview,
         "quality" : quality,
