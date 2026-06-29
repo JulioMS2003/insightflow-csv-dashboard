@@ -81,6 +81,35 @@ async def analyze_csv(file: UploadFile = File(...)):
         "data_quality_score": data_quality_score
     }
 
+    numeric_columns = df.select_dtypes(include="number").columns.to_list()
+    numeric_columns = [
+        column for column in numeric_columns
+        if column not in empty_columns
+    ]
+    numeric_statistics = {}
+    
+    for columns in numeric_columns:
+        column_data = df[columns].dropna()
+
+        if column_data.empty:
+            numeric_statistics[columns] = {
+            "mean" : None,
+            "median" : None,
+            "min" : None,
+            "max" : None,
+            "sum" : 0,
+            "std" : None
+        }
+            continue
+        numeric_statistics[columns] = {
+            "mean" : round(float(column_data.mean()),2),
+            "median" : round(float(column_data.median()),2),
+            "min" : round(float(column_data.min()),2),
+            "max" : round(float(column_data.max()),2),
+            "sum" : round(float(column_data.sum()),2),
+            "std" : round(float(column_data.std()),2) if len(column_data) > 1 else 0
+        }
+
     return{
         "filename": file.filename,
         "content_type": file.content_type,
@@ -91,6 +120,8 @@ async def analyze_csv(file: UploadFile = File(...)):
         "column_types" : column_types,
         "preview" : preview,
         "quality" : quality,
+        "numeric_columns" : numeric_columns,
+        "numeric_statistics" : numeric_statistics,
         "message": "CSV analyzed successfully."
         }
 

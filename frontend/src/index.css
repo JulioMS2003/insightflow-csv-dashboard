@@ -428,3 +428,44 @@ a{
   background: #fef2f2;
   color: #b91c1c;
 }
+
+.numeric-stats-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.numeric-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  min-width: 800px;
+}
+
+.numeric-stats-table th,
+.numeric-stats-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 14px;
+}
+
+.numeric-stats-table th {
+  background: #f8fafc;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.numeric-stats-table td {
+  color: #334155;
+}
+
+.numeric-stats-table tr:last-child td {
+  border-bottom: none;
+}
+
+.numeric-stats-table td:first-child {
+  font-weight: 700;
+  color: #0f172a;
+}

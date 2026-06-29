@@ -93,6 +93,43 @@ function AnalysisResult({result}){
                 </div>
             </div>
             <div className="analysis-section">
+                <h4>Numeric statistics</h4>
+
+                {result.numeric_columns.length > 0 ? (
+                    <div className="numeric-stats-table-wrapper">
+                        <table className="numeric-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Mean</th>
+                                    <th>Median</th>
+                                    <th>Min</th>
+                                    <th>Max</th>
+                                    <th>Sum</th>
+                                    <th>Std</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    Object.entries(result.numeric_statistics).map(([column, stats]) => (
+                                        <tr key={column}>
+                                            <td>{column}</td>
+                                            <td>{stats.mean ?? "N/A"}</td>
+                                            <td>{stats.median ?? "N/A"}</td>
+                                            <td>{stats.min ?? "N/A"}</td>
+                                            <td>{stats.max ?? "N/A"}</td>
+                                            <td>{stats.sum ?? "N/A"}</td>
+                                            <td>{stats.std ?? "N/A"}</td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <p className="success-text">No numeric columns detected.</p>
+                )}
+            </div>
+            <div className="analysis-section">
                 <h4>Data preview</h4>
                 <div className="preview-table-wrapper">
                     <table className="preview-table">
