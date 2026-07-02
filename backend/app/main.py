@@ -110,6 +110,34 @@ async def analyze_csv(file: UploadFile = File(...)):
             "std" : round(float(column_data.std()),2) if len(column_data) > 1 else 0
         }
 
+    categorical_columns = df.select_dtypes(include="object").columns.to_list()
+    categorical_columns = [
+        column for column in categorical_columns
+        if column not in empty_columns
+    ]
+    categorical_statistics = {}
+
+    for columns in categorical_columns:
+        column_data = df[columns].dropna()
+
+        if column_data.empty:
+            categorical_statistics[columns] = {
+            "unique_count" : 0,
+            "top_value" : None,
+            "top_frequency" : 0,
+            "top_values" : {}
+        }
+            continue
+
+        value_counts = column_data.value_counts().head(5)
+        
+        categorical_statistics[columns] = {
+            "unique_count" : int(column_data.nunique()),
+            "top_value" : str(value_counts.index[0] if not value_counts.empty else None),
+            "top_frequency" : int(value_counts.iloc[0] if not value_counts.empty else 0),
+            "top_values" : value_counts.to_dict()
+        }
+
     return{
         "filename": file.filename,
         "content_type": file.content_type,
@@ -122,6 +150,8 @@ async def analyze_csv(file: UploadFile = File(...)):
         "quality" : quality,
         "numeric_columns" : numeric_columns,
         "numeric_statistics" : numeric_statistics,
+        "categorical_columns" : categorical_columns,
+        "categorical_statistics" : categorical_statistics,
         "message": "CSV analyzed successfully."
         }
 

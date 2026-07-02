@@ -129,6 +129,50 @@ function AnalysisResult({result}){
                     <p className="success-text">No numeric columns detected.</p>
                 )}
             </div>
+
+            <div className="analysis-section">
+                <h4>Categorical statistics</h4>
+
+                {result.categorical_columns.length > 0 ? (
+                    <div className="categorical-stats-table-wrapper">
+                        <table className="categorical-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Unique values</th>
+                                    <th>Top value</th>
+                                    <th>Top frequency</th>
+                                    <th>Top 5 values</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {
+                                    Object.entries(result.categorical_statistics).map(([column, stats]) => (
+                                        <tr key={column}>
+                                            <td>{column}</td>
+                                            <td>{stats.unique_count}</td>
+                                            <td>{stats.top_value ?? "N/A"}</td>
+                                            <td>{stats.top_frequency}</td>
+                                            <td>
+                                                <div className="top-values-list">
+                                                    {Object.entries(stats.top_values).map(([value, count]) => (
+                                                        <span key={value} className="top-value-pill">
+                                                            {value}: {count}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <p className="success-text">No categorical columns detected</p>
+                )}
+            </div>
+
             <div className="analysis-section">
                 <h4>Data preview</h4>
                 <div className="preview-table-wrapper">
