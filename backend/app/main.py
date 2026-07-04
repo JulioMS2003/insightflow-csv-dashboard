@@ -110,10 +110,55 @@ async def analyze_csv(file: UploadFile = File(...)):
             "std" : round(float(column_data.std()),2) if len(column_data) > 1 else 0
         }
 
+    date_columns = []
+    date_statistics = {}
+
+    possible_date_columns = df.select_dtypes(include="object").columns.to_list()
+
+    for columns in possible_date_columns:
+        if columns in empty_columns:
+            continue
+
+        converted_dates = pd.to_datetime(df[columns], errors="coerce")
+        valid_dates = converted_dates.notna().sum()
+        total_values = df[columns].dropna().shape[0]
+
+        if total_values == 0:
+            continue
+
+        valid_percentage = (valid_dates / total_values) * 100
+
+        if valid_percentage >= 80:
+            date_columns.append(columns)
+
+            clean_dates = converted_dates.dropna()
+
+            records_by_month = (
+                clean_dates.
+                dt.to_period("M")
+                .astype(str)
+                .value_counts()
+                .sort_index()
+                .to_dict()
+            )
+
+            first_date = clean_dates.min()
+            last_date = clean_dates.max()
+
+            date_statistics[columns] = {
+                "first_date" : first_date.date().isoformat(),
+                "last_date" : last_date.date().isoformat(),
+                "date_range_days" : int((last_date - first_date).days),
+                "valid_dates" : int(valid_dates),
+                "invalid_dates" : int(total_values - valid_dates),
+                "records_by_month": records_by_month
+            }
+
     categorical_columns = df.select_dtypes(include="object").columns.to_list()
     categorical_columns = [
         column for column in categorical_columns
         if column not in empty_columns
+        and column not in date_columns
     ]
     categorical_statistics = {}
 
@@ -138,6 +183,8 @@ async def analyze_csv(file: UploadFile = File(...)):
             "top_values" : value_counts.to_dict()
         }
 
+        
+
     return{
         "filename": file.filename,
         "content_type": file.content_type,
@@ -152,6 +199,8 @@ async def analyze_csv(file: UploadFile = File(...)):
         "numeric_statistics" : numeric_statistics,
         "categorical_columns" : categorical_columns,
         "categorical_statistics" : categorical_statistics,
+        "date_columns" : date_columns,
+        "date_statistics" : date_statistics,
         "message": "CSV analyzed successfully."
         }
 

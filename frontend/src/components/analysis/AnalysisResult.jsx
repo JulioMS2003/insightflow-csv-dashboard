@@ -131,6 +131,72 @@ function AnalysisResult({result}){
             </div>
 
             <div className="analysis-section">
+                <h4>Date analysis</h4>
+
+                {result.date_columns.length > 0 ? (
+                    <div className="date-analysis-grid">
+                        {Object.entries(result.date_statistics).map(([column, stats]) => (
+                            <div key = {column} className="date-analysis-card">
+                                <h5>{column}</h5>
+
+                                <div className="date-stats-grid">
+                                    <div>
+                                        <span>First date</span>
+                                        <strong>{stats.first_date}</strong>
+                                    </div>
+                                    <div>
+                                        <span>Last date</span>
+                                        <strong>{stats.last_date}</strong>
+                                    </div>
+                                    <div>
+                                        <span>Date range</span>
+                                        <strong>{stats.date_range_days}</strong>
+                                    </div>
+                                    <div>
+                                        <span>Valid dates</span>
+                                        <strong>{stats.valid_dates}</strong>
+                                    </div>
+                                    <div>
+                                        <span>Invalid dates</span>
+                                        <strong>{stats.invalid_dates}</strong>
+                                    </div>
+                                </div>
+
+                                <div className="records-by-month">
+                                    <h6>Records by month</h6>
+
+                                    <div className="month-bars">
+                                        {Object.entries(stats.records_by_month).map(([month, count]) => {
+                                            const maxCount = Math.max(...Object.values(stats.records_by_month));
+                                            const percentage = (count / maxCount) * 100;
+
+                                            return (
+                                            <div key={month} className="month-bar-row">
+                                                <div className="month-bar-info">
+                                                <span>{month}</span>
+                                                <strong>{count}</strong>
+                                                </div>
+
+                                                <div className="month-bar-track">
+                                                <div
+                                                    className="month-bar-fill"
+                                                    style={{ width: `${percentage}%` }}
+                                                ></div>
+                                                </div>
+                                            </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}    
+                    </div>
+                ) : (
+                    <p className="success-text">No date columns detected.</p>
+                )}
+            </div>
+
+            <div className="analysis-section">
                 <h4>Categorical statistics</h4>
 
                 {result.categorical_columns.length > 0 ? (
