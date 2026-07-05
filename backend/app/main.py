@@ -183,7 +183,79 @@ async def analyze_csv(file: UploadFile = File(...)):
             "top_values" : value_counts.to_dict()
         }
 
-        
+    insights=[]
+
+    insights.append({
+        "type": "summary",
+        "title": "Dataset size",
+        "message": f"The dataset constains {row_count} rows and {columns_count} columns."
+    })
+
+    insights.append({
+        "type": "quality",
+        "title": "Data quality score",
+        "message": f"The data quality score is {data_quality_score} out of 100."
+    })
+
+    if total_missing_values == 0:
+        insights.append({
+            "type": "quality",
+            "title": "Missing values",
+            "message": "No missing values where found in the dataset."
+        })
+    else:
+        insights.append({
+            "type": "warning",
+            "title": "Missing values detected",
+            "message": f"There are {total_missing_values} missing values in the dataset, representing {missing_percentage}% of the cells."
+        })
+
+    if duplicate_rows == 0:
+        insights.append({
+            "type": "quality",
+            "title": "Duplicate rows",
+            "message": "No duplicate rows where detected."
+        })    
+    else:
+        insights.append({
+            "type": "warning",
+            "title": "Duplicate rows detected",
+            "message": f"The dataset contains {duplicate_rows} duplicate rows."
+        })  
+
+    if "revenue" in numeric_columns:
+        revenue_stats = numeric_statistics["revenue"]
+
+        insights.append({
+            "type": "numeric",
+            "title": "Revenue overview",
+            "message": f"Revenue ranges from {revenue_stats['min']} to {revenue_stats['max']}, with an average of {revenue_stats['mean']}."
+        })
+
+    important_categorical_columns =[
+        "category",
+        "region",
+        "sales_channel",
+        "payment_method",
+        "shipping_status"
+    ]
+
+    for columns in important_categorical_columns:
+        if columns in categorical_statistics:
+            stats = categorical_statistics[columns]
+
+            insights.append({
+                "type": "categorical",
+                "title": f"Most frequent {columns}",
+                "message": f"The most frequent value in {columns} is {stats['top_value']} with {stats['top_frequency']} records."
+            })
+
+    for columns, stats in date_statistics.items():
+        insights.append({
+            "type": "date",
+            "title": f"Date range for {columns}",
+            "message": f"The date range goes from {stats['first_date']} to {stats['last_date']}, covering {stats['date_range_days']} days."
+        })
 
     return{
         "filename": file.filename,
@@ -197,10 +269,11 @@ async def analyze_csv(file: UploadFile = File(...)):
         "quality" : quality,
         "numeric_columns" : numeric_columns,
         "numeric_statistics" : numeric_statistics,
-        "categorical_columns" : categorical_columns,
-        "categorical_statistics" : categorical_statistics,
         "date_columns" : date_columns,
         "date_statistics" : date_statistics,
+        "categorical_columns" : categorical_columns,
+        "categorical_statistics" : categorical_statistics,
+        "insights" : insights,
         "message": "CSV analyzed successfully."
         }
 

@@ -72,6 +72,25 @@ function AnalysisResult({result}){
                 </div>
             </div>
             <div className="analysis-section">
+                <h4>Automatic insights</h4>
+
+                {result.insights && result.insights.length > 0 ? (
+                    <div className="insights-grid">
+                        {result.insights.map((insight, index) => (
+                            <div key={index} className={`insight-card ${insight.type}`}>
+                                <div className="insight-header">
+                                    <span className="insight-type">{insight.type}</span>
+                                </div>
+                                    <h5>{insight.title}</h5>
+                                    <p>{insight.message}</p>
+                            </div>   
+                        ))}
+                    </div>
+                ) : (
+                    <p className="success-text">No automatic insights generated.</p>
+                )}
+            </div>
+            <div className="analysis-section">
                 <h4>Detected columns</h4>
                 <div className="columns-list">
                     {result.columns.map((column) => (
