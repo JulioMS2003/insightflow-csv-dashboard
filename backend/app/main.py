@@ -61,7 +61,12 @@ async def analyze_csv(file: UploadFile = File(...)):
     total_cells = row_count * columns_count
     missing_percentage = round((total_missing_values / total_cells) * 100, 2) if total_cells > 0 else 0
     duplicate_rows = int(df.duplicated().sum())
-    empty_columns = df.columns[df.isnull().all()].to_list()
+    empty_columns = []
+    empty_columns = [
+        column for column in df.columns
+        if df[column].isna().all() or df[column].astype(str).str.strip().eq("").all()
+    ]
+
     duplicate_percentage = (duplicate_rows / row_count) * 100 if row_count > 0 else 0
     empty_column_penalty = len(empty_columns) * 10
     data_quality_score = 100 - (missing_percentage * 0.5) - (duplicate_percentage * 0.3) - (empty_column_penalty * 0.2)

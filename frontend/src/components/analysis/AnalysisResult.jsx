@@ -1,3 +1,5 @@
+import DashboardOverview from "./DashboardOverview.jsx";
+import DataQualityDetails from "./DataQualityDetails.jsx"
 
 function AnalysisResult({result}){
     if (!result){
@@ -8,7 +10,9 @@ function AnalysisResult({result}){
     
     return(
         <div className="analysis-result">
-            <div className="analysis-summary">
+            <DashboardOverview result={result} />
+
+            {/* <div className="analysis-summary">
                 <div className="summary-card">
                     <span>Rows</span>
                     <strong>{result.row_count}</strong>
@@ -70,7 +74,8 @@ function AnalysisResult({result}){
                     <p className="success-text">No empty columns detected.</p>
                     )}
                 </div>
-            </div>
+            </div> */}
+
             <div className="analysis-section">
                 <h4>Automatic insights</h4>
 
@@ -90,6 +95,9 @@ function AnalysisResult({result}){
                     <p className="success-text">No automatic insights generated.</p>
                 )}
             </div>
+
+            <DataQualityDetails result={result} />
+
             <div className="analysis-section">
                 <h4>Detected columns</h4>
                 <div className="columns-list">
