@@ -69,3 +69,28 @@ The application will allow users to upload CSV files, analyze data quality, dete
 * Added a weighted data quality score.
 * Displayed data quality metrics in React.
 * Tested the system with CSV files containing missing values and empty columns.
+
+### Day 07
+* Added categorical statistics analysis.
+* Detected categorical columns automatically.
+* Calculated unique values, top value, top frequency and top 5 values.
+* Displayed categorical statistics in React.
+
+### Day 08
+* Added automatic date column detection.
+* Calculated first date, last date, date range, valid dates and invalid dates.
+* Added records by month analysis.
+* Excluded date columns from categorical statistics.
+* Displayed date analysis in React.
+
+### Day 09
+* Added automatic insights generation in the backend.
+* Generated summary, quality, warning, numeric, categorical and date insights.
+* Displayed insights as colored cards in React.
+
+### Day 10
+* Added dashboard overview section.
+* Added visual data quality progress bar.
+* Reorganized data quality information.
+* Created detailed checks for missing values, empty columns and duplicate rows.
+* Improved the analysis layout to avoid repeated information.
