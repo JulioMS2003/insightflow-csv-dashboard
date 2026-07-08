@@ -1,5 +1,6 @@
 import DashboardOverview from "./DashboardOverview.jsx";
 import DataQualityDetails from "./DataQualityDetails.jsx"
+import TopCategoriesOverview from "./TopCategoriesOverview.jsx";
 
 function AnalysisResult({result}){
     if (!result){
@@ -97,6 +98,7 @@ function AnalysisResult({result}){
             </div>
 
             <DataQualityDetails result={result} />
+            <TopCategoriesOverview result={result} />
 
             <div className="analysis-section">
                 <h4>Detected columns</h4>
