@@ -1,6 +1,7 @@
 import DashboardOverview from "./DashboardOverview.jsx";
 import DataQualityDetails from "./DataQualityDetails.jsx"
 import TopCategoriesOverview from "./TopCategoriesOverview.jsx";
+import NumericOverview from "./NumericOverview.jsx";
 
 function AnalysisResult({result}){
     if (!result){
@@ -99,6 +100,7 @@ function AnalysisResult({result}){
 
             <DataQualityDetails result={result} />
             <TopCategoriesOverview result={result} />
+            <NumericOverview result={result} />
 
             <div className="analysis-section">
                 <h4>Detected columns</h4>
@@ -122,7 +124,7 @@ function AnalysisResult({result}){
                 </div>
             </div>
             <div className="analysis-section">
-                <h4>Numeric statistics</h4>
+                <h4>Detailed numeric statistics</h4>
 
                 {result.numeric_columns.length > 0 ? (
                     <div className="numeric-stats-table-wrapper">
