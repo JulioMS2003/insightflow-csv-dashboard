@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { analyzeCsvFile } from '../../services/api.js';
+import { useAnalysis } from '../../context/AnalysisContext.jsx';
 import AnalysisResult from '../analysis/AnalysisResult.jsx'
 
 function FileUploader() {
+
+    const { saveAnalysisResult } = useAnalysis();
+
     const [selectedFile, setSelectedFile] = useState(null);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -11,6 +15,7 @@ function FileUploader() {
     function handleFileChange(event) {
         const file = event.target.files[0];
         setAnalysisResult(null); 
+        saveAnalysisResult(null);
 
         if (!file){
             setSelectedFile(null);
@@ -36,10 +41,12 @@ function FileUploader() {
             setIsLoading(true);
             setError("");
             setAnalysisResult(null);
+            saveAnalysisResult(null);
             
             const result = await analyzeCsvFile(selectedFile);
 
             setAnalysisResult(result);
+            saveAnalysisResult(result);
         } catch (error) {
             console.error(error);
             setError(error.message || "An error occurred while analyzing the CSV file.");
