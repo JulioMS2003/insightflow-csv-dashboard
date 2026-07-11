@@ -120,11 +120,31 @@ async def analyze_csv(file: UploadFile = File(...)):
 
     possible_date_columns = df.select_dtypes(include="object").columns.to_list()
 
+    date_keywords = [
+        "date",
+        "time",
+        "created",
+        "updated",
+        "month",
+        "year"
+    ]
+
     for columns in possible_date_columns:
         if columns in empty_columns:
             continue
 
-        converted_dates = pd.to_datetime(df[columns], errors="coerce")
+        column_name = columns.lower()
+
+        is_likely_date_column = any(
+            keyword in column_name
+            for keyword in date_keywords
+        )
+
+        if not is_likely_date_column:
+            continue
+
+        converted_dates = pd.to_datetime(df[columns], errors="coerce", format="mixed")
+
         valid_dates = converted_dates.notna().sum()
         total_values = df[columns].dropna().shape[0]
 
