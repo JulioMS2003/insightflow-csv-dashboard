@@ -14,6 +14,7 @@ function Sidebar() {
                 <NavLink to="/data">Data Preview</NavLink>
                 <NavLink to="/insights">Insights</NavLink>
                 <NavLink to="/history">History</NavLink>
+                <NavLink to="/details">Analysis Details</NavLink>
             </nav>
         </aside>
     )
