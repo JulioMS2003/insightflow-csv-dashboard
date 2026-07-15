@@ -1,6 +1,7 @@
 import { useAnalysis } from "../context/AnalysisContext.jsx"
 import DetailedNumericStatistics from "../components/analysis/DetailedNumericStatistics.jsx"
 import DateAnalysisDetails from "../components/analysis/DateAnalysisDetails.jsx"
+import CategoricalStatisticsDetails from "../components/analysis/CategoricalStatisticsDetails.jsx";
 
 function AnalysisDetails(){
 
@@ -26,6 +27,7 @@ function AnalysisDetails(){
 
             <DetailedNumericStatistics result={analysisResult} />
             <DateAnalysisDetails result={analysisResult} />
+            <CategoricalStatisticsDetails result={analysisResult} />
         </div>
     )
 }
