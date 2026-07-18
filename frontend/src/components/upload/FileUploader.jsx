@@ -78,16 +78,6 @@ function FileUploader() {
                 <button type="button" disabled={!selectedFile || isLoading} className="analyze-button" onClick={handleAnalyzeClick}>
                     {isLoading ? "Analyzing..." : "Analyze CSV"}
                 </button>
-                
-                {/* {analysisResult && (
-                    <div className="analysis-result">
-                        <p className="file_info_label">Backend response</p>
-                        <p>Filename : {selectedFile.name}</p>
-                        <p>Content type : {analysisResult.content_type}</p>
-                        <p>Size : {analysisResult.size_kb} KB</p>
-                        <p>Status : {analysisResult.message}</p>
-                    </div>
-                )} */}
 
                 <AnalysisResult result = {analysisResult} />
             </div>
